@@ -19,6 +19,7 @@ export CLOUDANT_URL="https://mycloudant.url.com"
 export CLOUDANT_APIKEY="myIAMapikey"
 export CLOUDANT_DATABASE="mydatabase"
 export REDIS_URL="redis://localhost:6379"
+```
 
 Run the script
 
