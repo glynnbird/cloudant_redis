@@ -6,16 +6,24 @@ import { createClient } from 'redis'
 
 // which Cloudant database to cache
 const CLOUDANT_DATABASE = process.env.CLOUDANT_DATABASE
+const REDIS_URL = process.env.REDIS_URL
 
 const main = async () => {
+  if (!CLOUDANT_DATABASE) {
+    console.error('Missing required environment variable: CLOUDANT_DATABASE')
+    process.exit(1)
+  }
 
   // connect to redis
-  const redisClient = await createClient()
+  const redisClient = await createClient(REDIS_URL ? { url: REDIS_URL } : undefined)
     .on('error', (err) => console.log('Redis Client Error', err))
     .connect()
 
   // create a cloudant-node-sdk client - configuration via env variables
   const client = CloudantV1.newInstance({})
+
+  // Enable automatic retries (with max retries 5, max retry interval 20 seconds).
+  client.enableRetries({ maxRetries: 3, maxRetryInterval: 20 });
 
   // create a ChangesFollower, starting from the beginning of the
   // database's changes feed with the document body included.
@@ -53,7 +61,7 @@ const main = async () => {
       callback()
     }
   })
-  
+
   // create a simple pipeline, connecting the changes feed stream
   // to our writable stream. The pipeline returns a promise which
   // resolves when all the changes are consumed, or rejects on an

@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@ibm-cloud/cloudant": "^0.12.9",
-    "redis": "^5.8.2"
+    "@ibm-cloud/cloudant": "^0.12.22",
+    "redis": "^6.0.1"
   }
 }
